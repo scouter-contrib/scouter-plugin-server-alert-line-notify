@@ -1,4 +1,4 @@
-# scouter-plugin-server-alert-line
+# scouter-plugin-server-alert-line-notify
 [![Englsh](https://img.shields.io/badge/language-English-orange.svg)](README.md) ![Korean](https://img.shields.io/badge/language-Korean-blue.svg)
 
 ### Scouter server plugin to send a alert via line
