@@ -18,9 +18,8 @@
 * **_ext\_plugin\_line\_send\_alert_** : Line 메시지 발송 여부 (true / false) - 기본 값은 false
 * **_ext\_plugin\_line\_debug_** : 로깅 여부 - 기본 값은 false
 * **_ext\_plugin\_line\_level_** : 수신 레벨(0 : INFO, 1 : WARN, 2 : ERROR, 3 : FATAL) - 기본 값은 0
-* **_ext\_plugin\_line\_access\_token_** : Line 채널 Token
-* **_ext\_plugin\_line\_group\_id_** : 메시지를 전송할 그룹 id 또는 채팅방 id (이 id는 Line의 webhook 호출시 request에서 확인 가능)
-
+* **_ext\_plugin\_line\_notify\_token_** : Line notify bot Token
+ 
 * Example
 ```
 # External Interface (Line)
@@ -46,8 +45,5 @@ ext_plugin_line_group_id=XXXXXXXXXXXXXXXXXXXXXXXXXXXX
 * mvn clean package
     
 * Deploy
-    - dependency library와 함께 scouter-plugin-server-alert-line-xxx.jar 파일을 복사하여 Scouter Server 설치 경로 하위의 lib/ 폴더에 Copy 한다.
+    - dependency library와 함께 scouter-plugin-server-alert-line-notify-xxx.jar 파일을 복사하여 Scouter Server 설치 경로 하위의 lib/ 폴더에 Copy 한다.
     
-## Appendix
-##### Step by Step 라인 메신저와 Scouter 경고 연동하기 #####
-* - [https://goo.gl/AkGCQV](https://goo.gl/AkGCQV)

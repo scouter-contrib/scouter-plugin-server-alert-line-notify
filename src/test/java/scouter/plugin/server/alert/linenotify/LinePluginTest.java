@@ -9,25 +9,26 @@ import scouter.lang.AlertLevel;
 import scouter.lang.pack.AlertPack;
 import scouter.server.Configure;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Gun Lee (gunlee01@gmail.com) on 2016. 12. 20.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LinePluginTest {
-    public final static String lineAccessToken = "Wd8jVkD5Fzh7CMl1CTmyOo9ILtWq1MoknQ7kbTMMjQmdU6+cDmfqkwwuE5mB5rLQcFeWCjvjJgnE/MmqT6D+gEsO68vKQh11YygUT7dQmh1JwmWG5mbRqk98Xo1+aBWHllG0AL/6xAp7YMtG9MDVPwdB04t89/1O/w1cDnyilFU=";
-    public static final String lineGroupId = "C0246cfa665d99ec6dde3f12bec77eb4a";
+    public final static String notifyToken = "V62osjl4BgJR4kSEUGacJHx4aZ500R4NipNpnY2D1df";
 
     @Mock Configure conf;
-    @InjectMocks LinePlugin plugin = new LinePlugin();
+    @InjectMocks
+    LineNotifyPlugin plugin = new LineNotifyPlugin();
 
     @Test
     public void alert() throws Exception {
-        when(conf.getValue("ext_plugin_line_access_token")).thenReturn(lineAccessToken);
-        when(conf.getValue("ext_plugin_line_group_id")).thenReturn(lineGroupId);
+        when(conf.getValue("ext_plugin_line_notify_token")).thenReturn(notifyToken);
         when(conf.getBoolean(eq("ext_plugin_line_send_alert"), anyBoolean())).thenReturn(true);
+        conf._trace = true;
 
         AlertPack ap = genAlertPack();
         plugin.alert(ap);

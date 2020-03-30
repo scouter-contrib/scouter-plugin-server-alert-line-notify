@@ -17,13 +17,14 @@
  */
 package scouter.plugin.server.alert.linenotify;
 
-import com.google.gson.Gson;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import scouter.lang.AlertLevel;
 import scouter.lang.TimeTypeEnum;
@@ -48,7 +49,7 @@ import java.util.List;
  * @author Gun Lee (gunlee01@gmail.com) on 2016. 12. 20.
  * @author original Sang-Cheon Park(nices96@gmail.com)
  */
-public class LinePlugin {
+public class LineNotifyPlugin {
 
 	// Get singleton Configure instance from server
     Configure conf = Configure.getInstance();
@@ -67,14 +68,12 @@ public class LinePlugin {
         			public void run() {
                         try {
                         	// Get server configurations for line
-                            String token = conf.getValue("ext_plugin_line_access_token");
-                            String chatId = conf.getValue("ext_plugin_line_group_id");
+                            String token = conf.getValue("ext_plugin_line_notify_token");
                             
                             assert token != null;
-                            assert chatId != null;
                         
                             // Make a request URL using telegram bot api
-                            String url = "https://api.line.me/v2/bot/message/push";
+                            String url = "https://notify-api.line.me/api/notify";
 
                         	// Get the agent Name
                         	String name = AgentManager.getAgentName(pack.objHash) == null ? "N/A" : AgentManager.getAgentName(pack.objHash);
@@ -102,16 +101,13 @@ public class LinePlugin {
                                               "[TITLE] : " + title + "\n" + 
                                               "[MESSAGE] : " + msg;
 
-                            LinePushFormat pushFormat = new LinePushFormat();
-                            pushFormat.setTo(chatId);
-                            pushFormat.addMessage(new StringMessage(contents));
+							ArrayList<NameValuePair> postParams = new ArrayList<NameValuePair>();
+							postParams.add(new BasicNameValuePair("message", contents));
 
-                            String body = new Gson().toJson(pushFormat);
-                  
                             HttpPost post = new HttpPost(url);
-                            post.addHeader("Content-Type","application/json");
-                            post.addHeader("Authorization", "Bearer {" + token + "}");
-                            post.setEntity(new StringEntity(body));
+                            post.addHeader("Content-Type","application/x-www-form-urlencoded");
+                            post.addHeader("Authorization", "Bearer " + token);
+                            post.setEntity(new UrlEncodedFormEntity(postParams));
                           
                             CloseableHttpClient client = HttpClientBuilder.create().build();
                           
@@ -119,11 +115,11 @@ public class LinePlugin {
                             HttpResponse response = client.execute(post);
                             
                             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                                println("Line message sent to [" + chatId + "] successfully.");
+                                println("Line message sent successfully.");
                             } else {
                                 println("Line message sent failed. Verify below information.");
                                 println("[URL] : " + url);
-                                println("[Message] : " + body);
+                                println("[Message] : " + contents);
                                 println("[Reason] : " + EntityUtils.toString(response.getEntity(), "UTF-8"));
                             }
                         } catch (Exception e) {
